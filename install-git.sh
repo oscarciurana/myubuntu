@@ -25,12 +25,16 @@ gitinstall() {
   set -e
  
   printf "${BLUE}Installing Git...${NORMAL}\n"
-  sudo apt-get -y install \
-    subversion \
-    git
+  if [ ! -f ~/.gitconfig ]; then
+    curl -s https://raw.githubusercontent.com/jig/myubuntu/master/gitconfig/.gitconfig > ~/.gitconfig
+  fi
   
-  printf "${BLUE}Configuring Git...${NORMAL}\n"
-  svn checkout https://github.com/jig/myubuntu/trunk/gitconfig ~/
+  sudo apt-get -y install software-properties-common
+  sudo add-apt-repository -y ppa:git-core/ppa
+  sudo apt-get -y update
+  curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+  sudo apt-get -y install git git-lfs subversion
+  git lfs install
 }
 
 # Check if reboot is needed
